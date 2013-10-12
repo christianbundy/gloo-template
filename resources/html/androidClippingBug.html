@@ -1,0 +1,96 @@
+<!doctype html>
+
+<html>
+<head>
+  <title>Android Clipping Bug</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+</head>
+<body>
+
+<style type="text/css">
+
+#stage
+{
+  position: absolute;
+  height: 2448px;
+  width: 1936px;
+  left: 0px;
+  top: 0px;
+  margin-left: 0px;
+  margin-top: 0px;
+  background-color: lightblue;
+  transform-origin: 0px 0px;
+  -webkit-transform-origin: 0px 0px;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+#text
+{
+  width: 1406px;
+  height: 900px;
+  top: 0px;
+  left: 0px;
+  font-size: 75px;
+  line-height: 105px;
+  color: black;
+  background-color: white;
+  transform: translate3d(265px, 265px, 0px);
+  -webkit-transform: translate3d(265px, 265px, 0px);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+#text > span
+{
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+</style>
+
+<div id="stage"><ol>
+  <div id="text"><span>Some Text</span></div>
+</div>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+<script type="text/javascript">
+
+  $(function() {
+
+    function debug(msg) {
+      console.log(msg);
+      alert(msg);
+    }
+
+    // scale stage to fit inside viewport
+    var stgobj = $('#stage');
+    
+    // get stage size
+    var stgwth = stgobj.width();
+    var stghgt = stgobj.height();
+    debug('stage size = ' + stgwth + 'x' + stghgt);
+
+    // get viewport size
+    var vptwth = $(window).width();
+    var vpthgt = $(window).height();
+    debug('viewport size = ' + vptwth + 'x' + vpthgt);
+
+    // scale stage to fit inside viewport, maintain aspect ratio
+    var scl = Math.min(vptwth/stgwth,vpthgt/stghgt);
+    debug('computed scale is = ' + scl);
+    stgobj.css({
+      "transform"               : "scale("+scl+","+scl+")",
+      "webkit-transform"        : "scale("+scl+","+scl+")"
+    });
+
+    // set some text
+    $('#text > span').text('Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.');
+//    $('#text > span').text('Lorem ipsum dolor sit amet'); // note: this will not be clipped if <span> opacity is 0.9
+
+  });
+
+</script>
+
+</body>
+</html>

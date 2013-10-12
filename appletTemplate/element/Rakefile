@@ -1,0 +1,41 @@
+# Configuration
+$scaleMode = "ASPECT_FIT"
+$stageMargin = "200"
+$orgAssets = "gloo_assets_202"
+$saProjectScalerPercent = 100
+
+# Globals
+$element = File.basename(Dir.pwd)
+$applet  = File.basename(File.dirname(Dir.pwd))
+$force = false
+
+desc "Build documents and scale assets."
+task :default => [:build, :scale]
+
+desc "Build documents from SA export."
+task :build do
+  require "../../resources/rb/build.rb"
+end
+
+desc "Scale images and move to asset bundle."
+task :scale do
+  require "../../resources/rb/scale.rb"
+end
+
+desc "Force rebuild and rescale"
+task :force do
+	$force = true
+	require "../../resources/rb/scale.rb"
+	require "../../resources/rb/build.rb"
+end
+
+desc "Force rebuild only"
+task :force_build do
+	$force = true
+	require "../../resources/rb/build.rb"
+end
+
+desc "Create scaled SA project"
+task :scale_project do
+	require "../../resources/rb/scaleProjectRake.rb"
+end
